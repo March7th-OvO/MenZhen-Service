@@ -51,6 +51,7 @@ public class UserService {
             doctor.setPhone(registerDTO.getPhone());
             doctor.setSchedulingStatus(0); // 默认休息
             doctor.setCreateTime(java.time.LocalDateTime.now());
+            doctor.setUserId(user.getUserId()); // 关联userId
             doctorService.addDoctor(doctor);
         }
 

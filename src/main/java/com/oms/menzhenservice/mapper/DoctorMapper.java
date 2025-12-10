@@ -13,7 +13,8 @@ public interface DoctorMapper {
     @Select("SELECT * FROM doctor WHERE dept_id = #{deptId} AND scheduling_status = 1")
     List<Doctor> findAvailableByDept(Long deptId);
 
-    @Insert("INSERT INTO doctor(name, dept_id, title, phone, scheduling_status) VALUES(#{name}, #{deptId}, #{title}, #{phone}, 1)")
+    @Insert("INSERT INTO doctor(name, dept_id, title, phone, scheduling_status, user_id) VALUES(#{name}, #{deptId}, #{title}, #{phone}, #{schedulingStatus}, #{userId})")
+    @Options(useGeneratedKeys = true, keyProperty = "doctorId")
     int insert(Doctor doctor);
 
     // 根据用户ID查找医生信息
