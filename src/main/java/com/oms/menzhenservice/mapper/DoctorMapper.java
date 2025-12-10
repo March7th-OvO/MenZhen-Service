@@ -15,4 +15,8 @@ public interface DoctorMapper {
 
     @Insert("INSERT INTO doctor(name, dept_id, title, phone, scheduling_status) VALUES(#{name}, #{deptId}, #{title}, #{phone}, 1)")
     int insert(Doctor doctor);
+
+    // 根据用户ID查找医生信息
+    @Select("SELECT * FROM doctor WHERE user_id = #{userId}")
+    Doctor findByUserId(Long userId);
 }

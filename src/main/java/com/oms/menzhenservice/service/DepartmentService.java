@@ -1,4 +1,3 @@
-
 package com.oms.menzhenservice.service;
 
 import com.oms.menzhenservice.entity.Department;
@@ -20,6 +19,13 @@ public class DepartmentService {
      */
     public List<Department> getAllDepartments() {
         return departmentMapper.findAll();
+    }
+
+    /**
+     * 根据ID查询科室
+     */
+    public Department getDepartmentById(Long deptId) {
+        return departmentMapper.findById(deptId);
     }
 
     /**

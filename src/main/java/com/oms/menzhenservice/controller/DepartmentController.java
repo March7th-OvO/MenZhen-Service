@@ -20,6 +20,16 @@ public class DepartmentController {
         return Result.success(departmentService.getAllDepartments());
     }
 
+    @GetMapping("/{deptId}")
+    public Result<Department> getDepartmentById(@PathVariable Long deptId) {
+        Department department = departmentService.getDepartmentById(deptId);
+        if (department != null) {
+            return Result.success(department);
+        } else {
+            return Result.error(400, "科室不存在");
+        }
+    }
+
     @PostMapping("/update")
     public Result<Void> update(@RequestBody Department department) {
         departmentService.updateDepartment(department);

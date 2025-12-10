@@ -5,6 +5,7 @@ import com.oms.menzhenservice.entity.Doctor;
 import com.oms.menzhenservice.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -30,5 +31,32 @@ public class DoctorController {
     public Result<Void> add(@RequestBody Doctor doctor) {
         doctorService.addDoctor(doctor);
         return Result.success();
+    }
+
+    // 获取当前登录用户的医生信息
+    @GetMapping("/info")
+    public Result<Doctor> getCurrentDoctorInfo(HttpServletRequest request) {
+        // 从请求中获取当前用户ID
+        Object userIdObj = request.getAttribute("currId");
+        if (userIdObj == null) {
+            return Result.error(400, "用户未登录");
+        }
+
+        // 正确处理Integer到Long的转换
+        Long userId;
+        if (userIdObj instanceof Integer) {
+            userId = ((Integer) userIdObj).longValue();
+        } else if (userIdObj instanceof Long) {
+            userId = (Long) userIdObj;
+        } else {
+            return Result.error(400, "用户ID类型错误");
+        }
+
+        Doctor doctor = doctorService.getDoctorByUserId(userId);
+        if (doctor == null) {
+            return Result.error(400, "当前用户不是医生");
+        }
+
+        return Result.success(doctor);
     }
 }

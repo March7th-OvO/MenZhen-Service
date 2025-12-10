@@ -22,4 +22,9 @@ public class DoctorService {
     public void addDoctor(Doctor doctor) {
         doctorMapper.insert(doctor);
     }
+
+    // 根据用户ID获取医生信息
+    public Doctor getDoctorByUserId(Long userId) {
+        return doctorMapper.findByUserId(userId);
+    }
 }
