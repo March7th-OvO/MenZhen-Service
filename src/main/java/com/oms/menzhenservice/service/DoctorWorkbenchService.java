@@ -84,6 +84,9 @@ public class DoctorWorkbenchService {
         }
 
         // 3. 修改挂号单状态为 "2:已就诊"
-        workbenchMapper.updateRegStatusToComplete(dto.getRegId());
+        int updatedRows = workbenchMapper.updateRegStatusToComplete(dto.getRegId());
+        if (updatedRows == 0) {
+            throw new RuntimeException("未能更新挂号状态，可能挂号记录不存在或已处于完成状态");
+        }
     }
 }
