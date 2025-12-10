@@ -59,6 +59,7 @@ public class DoctorWorkbenchService {
             presMap.put("regId", dto.getRegId());
             presMap.put("totalAmount", total);
             workbenchMapper.insertPrescription(presMap);
+            // 修改这一行: 兼容 BigInteger/Long 等数字类型
             Long presId = ((Number) presMap.get("presId")).longValue();
 
             // --- [核心修改] 循环插入明细 并 扣减库存 ---
@@ -84,6 +85,9 @@ public class DoctorWorkbenchService {
         }
 
         // 3. 修改挂号单状态为 "2:已就诊"
-        workbenchMapper.updateRegStatusToComplete(dto.getRegId());
+        int updatedRows = workbenchMapper.updateRegStatusToComplete(dto.getRegId());
+        if (updatedRows == 0) {
+            throw new RuntimeException("未能更新挂号状态，可能挂号记录不存在或已处于完成状态");
+        }
     }
 }
