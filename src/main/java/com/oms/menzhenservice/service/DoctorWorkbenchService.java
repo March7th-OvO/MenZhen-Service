@@ -59,6 +59,7 @@ public class DoctorWorkbenchService {
             presMap.put("regId", dto.getRegId());
             presMap.put("totalAmount", total);
             workbenchMapper.insertPrescription(presMap);
+            // 修改这一行: 兼容 BigInteger/Long 等数字类型
             Long presId = ((Number) presMap.get("presId")).longValue();
 
             // --- [核心修改] 循环插入明细 并 扣减库存 ---
