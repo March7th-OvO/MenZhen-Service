@@ -49,8 +49,9 @@ public class UserService {
             doctor.setDeptId(registerDTO.getDeptId());
             doctor.setTitle(registerDTO.getTitle());
             doctor.setPhone(registerDTO.getPhone());
-            doctor.setSchedulingStatus(0); // 默认休息
+            doctor.setSchedulingStatus(1); // 默认出诊
             doctor.setCreateTime(java.time.LocalDateTime.now());
+            doctor.setUserId(user.getUserId()); // 关联userId
             doctorService.addDoctor(doctor);
         }
 
