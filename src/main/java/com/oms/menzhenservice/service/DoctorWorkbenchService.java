@@ -34,6 +34,7 @@ public class DoctorWorkbenchService {
     @Transactional(rollbackFor = Exception.class)
     public void submitDiagnosis(DiagnosisDTO dto) {
         // 1. 保存病历
+        System.out.println("接收到的 regId: " + dto.getRegId());
         MedicalRecord record = new MedicalRecord();
         record.setRegId(dto.getRegId());
         record.setPatientId(dto.getPatientId());

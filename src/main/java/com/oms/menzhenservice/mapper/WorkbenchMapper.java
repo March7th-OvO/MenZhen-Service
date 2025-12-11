@@ -1,7 +1,7 @@
 package com.oms.menzhenservice.mapper;
 
 import com.oms.menzhenservice.entity.MedicalRecord;
-import com.oms.menzhenservice.entity.Registration;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.*;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +34,7 @@ public interface WorkbenchMapper {
     int insertPrescriptionItem(Map<String, Object> itemMap);
 
     // 5. 更新挂号状态为已就诊 (状态2)
+    // 修改方法签名，加上 @Param("regId")
     @Update("UPDATE registration SET status = 2 WHERE reg_id = #{regId}")
-    int updateRegStatusToComplete(Long regId);
+    int updateRegStatusToComplete(@Param("regId") Long regId);
 }
