@@ -23,7 +23,7 @@ public interface MedicineMapper {
     @Options(useGeneratedKeys = true, keyProperty = "medId")
     int insert(Medicine medicine);
 
-    @Update("UPDATE medicine SET med_name=#{medName}, price=#{price}, stock=#{stock}, status=#{status} WHERE med_id=#{medId}")
+    @Update("UPDATE medicine SET med_code=#{medCode}, med_name=#{medName}, format=#{format}, price=#{price}, stock=#{stock}, category=#{category}, status=#{status} WHERE med_id=#{medId}")
     int update(Medicine medicine);
 
     /**
