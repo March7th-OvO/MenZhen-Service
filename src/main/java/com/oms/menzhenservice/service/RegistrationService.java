@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class RegistrationService {
 
@@ -40,7 +42,6 @@ public class RegistrationService {
         reg.setSettlementId(dto.getSettlementId());
         reg.setRegDate(dto.getRegDate());
         reg.setRegTimeSlot(dto.getRegTimeSlot());
-        reg.setUserId(dto.getUserId());
         reg.setFee(level.getFee()); // 设置费用
 
         // 3. 保存
@@ -50,5 +51,20 @@ public class RegistrationService {
 
     public void cancel(Long regId) {
         registrationMapper.cancelRegistration(regId);
+    }
+    
+    // 查询所有挂号单
+    public List<Registration> findAllRegistrations() {
+        return registrationMapper.findAll();
+    }
+    
+    // 根据患者ID查询挂号记录
+    public List<Registration> findRegistrationsByPatientId(Long patientId) {
+        return registrationMapper.findByPatientId(patientId);
+    }
+    
+    // 根据医生ID查询挂号记录
+    public List<Registration> findRegistrationsByDoctorId(Long doctorId) {
+        return registrationMapper.findByDoctorId(doctorId);
     }
 }

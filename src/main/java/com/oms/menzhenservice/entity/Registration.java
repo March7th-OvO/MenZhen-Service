@@ -17,6 +17,5 @@ public class Registration {
     private String regTimeSlot; // 上午/下午
     private BigDecimal fee;
     private Integer status; // 1:已挂号
-    private Long userId;    // 操作员
     private LocalDateTime createTime;
 }

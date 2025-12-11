@@ -20,4 +20,8 @@ public interface DoctorMapper {
     // 根据用户ID查找医生信息
     @Select("SELECT * FROM doctor WHERE user_id = #{userId}")
     Doctor findByUserId(Long userId);
+    
+    // 根据医生ID查询医生信息
+    @Select("SELECT * FROM doctor WHERE doctor_id = #{doctorId}")
+    Doctor findById(Long doctorId);
 }

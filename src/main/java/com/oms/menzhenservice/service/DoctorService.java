@@ -27,4 +27,9 @@ public class DoctorService {
     public Doctor getDoctorByUserId(Long userId) {
         return doctorMapper.findByUserId(userId);
     }
+    
+    // 根据医生ID获取医生信息
+    public Doctor getDoctorById(Long doctorId) {
+        return doctorMapper.findById(doctorId);
+    }
 }

@@ -23,4 +23,10 @@ public class PatientController {
     public Result<Patient> add(@RequestBody Patient patient) {
         return Result.success(patientService.createPatient(patient));
     }
+    
+    // 根据患者ID获取患者信息
+    @GetMapping("/info-by-id/{patientId}")
+    public Result<Patient> getInfoById(@PathVariable Long patientId) {
+        return Result.success(patientService.getPatientById(patientId));
+    }
 }
