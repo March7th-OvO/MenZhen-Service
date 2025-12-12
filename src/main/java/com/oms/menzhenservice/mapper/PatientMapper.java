@@ -15,4 +15,8 @@ public interface PatientMapper {
 
     @Update("UPDATE patient SET phone=#{phone}, address=#{address} WHERE patient_id=#{patientId}")
     int update(Patient patient);
+    
+    // 根据患者ID查询患者信息
+    @Select("SELECT * FROM patient WHERE patient_id = #{patientId}")
+    Patient findById(Long patientId);
 }

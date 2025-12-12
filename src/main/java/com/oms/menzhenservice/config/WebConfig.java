@@ -18,6 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**") // 拦截所有接口
                 .excludePathPatterns("/api/user/login") // 放行登录
                 .excludePathPatterns("/api/user/register") // 放行注册
+                .excludePathPatterns("/api/user/verify-user-info") // 放行用户信息验证接口
+                .excludePathPatterns("/api/user/reset-password") // 放行密码重置接口
                 .excludePathPatterns("/api/dept/list") // 放行科室列表接口
                 .excludePathPatterns("/api/dept/**"); // 放行所有科室详情接口
     }

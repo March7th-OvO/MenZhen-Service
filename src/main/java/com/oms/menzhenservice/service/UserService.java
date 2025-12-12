@@ -18,6 +18,33 @@ public class UserService {
     private DoctorService doctorService;
 
     /**
+     * 重置用户密码
+     * @param username 用户名
+     * @param idNumber 身份证号码
+     * @param phone 手机号
+     * @param newPassword 新密码
+     * @return 重置成功返回true，失败返回false
+     */
+    public boolean resetPassword(String username, String idNumber, String phone, String newPassword) {
+        // 查找用户
+        User user = userMapper.findByUsername(username);
+        
+        // 用户不存在
+        if (user == null) {
+            return false;
+        }
+        
+        // 验证身份证号码和手机号
+        if (!user.getIdNumber().equals(idNumber) || !user.getPhone().equals(phone)) {
+            return false;
+        }
+        
+        // 更新密码
+        int result = userMapper.updatePasswordByUsername(username, newPassword);
+        return result > 0;
+    }
+
+    /**
      * 用户注册
      * @param registerDTO 注册信息
      * @return 注册成功返回true，失败返回false
@@ -35,6 +62,8 @@ public class UserService {
         user.setUsername(registerDTO.getUsername());
         user.setPassword(registerDTO.getPassword());
         user.setRealName(registerDTO.getRealName());
+        user.setIdNumber(registerDTO.getIdNumber());
+        user.setPhone(registerDTO.getPhone());
         user.setRole(registerDTO.getRole());
         user.setStatus(1);
         user.setCreateTime(java.time.LocalDateTime.now());
@@ -65,6 +94,8 @@ public class UserService {
         dto.setUsername(user.getUsername());
         dto.setPassword(user.getPassword());
         dto.setRealName(user.getRealName());
+        dto.setIdNumber(user.getIdNumber());
+        dto.setPhone(user.getPhone());
         dto.setRole(user.getRole());
         return register(dto);
     }

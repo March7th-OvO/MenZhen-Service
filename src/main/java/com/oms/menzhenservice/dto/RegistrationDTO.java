@@ -12,5 +12,4 @@ public class RegistrationDTO {
     private Long settlementId; // 结算类别ID
     private LocalDate regDate;
     private String regTimeSlot;
-    private Long userId;       // 操作员ID
 }

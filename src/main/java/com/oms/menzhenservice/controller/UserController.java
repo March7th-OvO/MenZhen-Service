@@ -24,6 +24,68 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @PostMapping("/reset-password")
+    public Result<String> resetPassword(@RequestBody Map<String, String> resetInfo) {
+        String username = resetInfo.get("username");
+        String idNumber = resetInfo.get("idCard");  // 修改为 idCard 以匹配前端字段
+        String phone = resetInfo.get("phone");
+        String newPassword = resetInfo.get("newPassword");  // 修改为 newPassword 以匹配前端字段
+
+        // 参数校验
+        if (username == null || username.isEmpty() ||
+            idNumber == null || idNumber.isEmpty() ||
+            phone == null || phone.isEmpty() ||
+            newPassword == null || newPassword.isEmpty()) {
+            return Result.error(400, "所有字段都是必填的");
+        }
+
+        // 调用服务层重置密码
+        boolean success = userService.resetPassword(username, idNumber, phone, newPassword);
+        if (success) {
+            return Result.success("密码重置成功");
+        } else {
+            return Result.error(400, "用户信息验证失败，无法重置密码");
+        }
+    }
+
+    @PostMapping("/verify-user-info")
+    public Result<Map<String, Object>> verifyUserInfo(@RequestBody Map<String, String> userInfo) {
+        String username = userInfo.get("username");
+        String idNumber = userInfo.get("id_number");
+        String phone = userInfo.get("phone");
+
+        // 验证用户信息逻辑
+        User user = userMapper.findByUsername(username);
+        Map<String, Object> result = new HashMap<>();
+
+        if (user != null) {
+            boolean isValid = true;
+            String message = "验证成功";
+
+            if (!user.getIdNumber().equals(idNumber)) {
+                isValid = false;
+                message = "身份证号码不匹配";
+            } else if (!user.getPhone().equals(phone)) {
+                isValid = false;
+                message = "手机号码不匹配";
+            }
+
+            result.put("valid", isValid);
+            result.put("message", message);
+            result.put("user", user);
+
+            if (isValid) {
+                return Result.success(result);
+            } else {
+                return Result.error(400, message);
+            }
+        } else {
+            result.put("valid", false);
+            result.put("message", "用户不存在");
+            return Result.error(400, "用户不存在");
+        }
+    }
+
     @PostMapping("/login")
     public Result<Map<String, Object>> login(@RequestBody User loginUser) {
         User user = userMapper.login(loginUser.getUsername(), loginUser.getPassword());

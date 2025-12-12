@@ -26,4 +26,9 @@ public class PatientService {
         patientMapper.insert(patient);
         return patient;
     }
+    
+    // 根据患者ID查询患者信息
+    public Patient getPatientById(Long patientId) {
+        return patientMapper.findById(patientId);
+    }
 }
