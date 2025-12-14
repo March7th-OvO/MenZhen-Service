@@ -24,11 +24,16 @@ public class LoginInterceptor implements HandlerInterceptor {
             String token = authHeader.substring(7);
             try {
                 Claims claims = jwtUtil.parseToken(token);
-                // 将用户信息存入 request，方便 Controller 获取
-                request.setAttribute("currUser", claims.getSubject());
-                request.setAttribute("currRole", claims.get("role"));
-                request.setAttribute("currId", claims.get("userId"));
-                return true;
+                String username = claims.getSubject();
+                
+                // 验证token是否有效
+                if (jwtUtil.isTokenValid(username, token)) {
+                    // 将用户信息存入 request，方便 Controller 获取
+                    request.setAttribute("currUser", username);
+                    request.setAttribute("currRole", claims.get("role"));
+                    request.setAttribute("currId", claims.get("userId"));
+                    return true;
+                }
             } catch (Exception e) {
                 // Token 无效
             }

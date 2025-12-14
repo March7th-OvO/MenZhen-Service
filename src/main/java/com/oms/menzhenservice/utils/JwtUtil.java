@@ -4,14 +4,16 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value; // 新增
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import jakarta.annotation.PostConstruct; // Spring Boot 3 使用 jakarta
-// 如果是 Spring Boot 2，请使用 import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
-import java.nio.charset.StandardCharsets; // 新增
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtil {
@@ -19,6 +21,9 @@ public class JwtUtil {
     // 1. 注入配置文件中的密钥字符串
     @Value("${jwt.secret}")
     private String secret;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     // 2. 定义实例变量（去掉 static final）
     private Key key;
@@ -33,7 +38,7 @@ public class JwtUtil {
     }
 
     public String generateToken(String username, String role, Long userId) {
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
                 .claim("userId", userId)
@@ -41,6 +46,11 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(key, SignatureAlgorithm.HS256) // 这里改用实例变量 key，并指定算法
                 .compact();
+        
+        // 将token存储到Redis中，设置过期时间与JWT一致
+        redisTemplate.opsForValue().set("token:" + username, token, EXPIRATION, TimeUnit.MILLISECONDS);
+        
+        return token;
     }
 
     public Claims parseToken(String token) {
@@ -49,5 +59,14 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+    
+    public void invalidateToken(String username) {
+        redisTemplate.delete("token:" + username);
+    }
+    
+    public boolean isTokenValid(String username, String token) {
+        String cachedToken = (String) redisTemplate.opsForValue().get("token:" + username);
+        return token.equals(cachedToken);
     }
 }
